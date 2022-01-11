@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 25</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.3"></script>
+	<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+	<div id="app">
+		<div class="container">
+            <h1>{{ title }}</h1>
+
+			<br>
+
+			<h2>Séries</h2>
+
+			<ul class="list-group">
+				<li class="list-group-item"><router-link :to="{ name: 'transformers' }">Tranformers</router-link></li>
+				<li class="list-group-item"><router-link :to="{ name: 'got' }">Game Of Thrones</router-link></li>
+			</ul>
+
+			<hr>
+
+			<router-view></router-view>
+
+			<hr>
+
+			<transformers-characters></transformers-characters>
+			
+			<br><br>
+
+		</div>
+	</div>
+
+	<template id="transformers">
+		<div class="card">
+			<div class="card-header">
+				<i>Sinopse de <b>Transformers</b></i>
+			</div>
+			<div class="card-body">
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+			</div>
+		  </div>
+	</template>
+
+	<template id="transformers-c">
+		<div class="row">
+			<div class="col">
+				<div class="card">
+					<div class="card-header">Personagens de Transformers</div>
+					<div class="card-body">
+						<ul>
+							<li v-for="character in characters"><router-link :to="{ name: 'transformers-characters', params: { name: character.slug } }">{{ character.name }}</router-link></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="card">
+					<div class="card-header">História</div>
+					<div class="card-body">
+						"História de {{ $route.params.name }} História de {{ $route.params.name }} História de {{ $route.params.name }} História de {{ $route.params.name }} História de {{ $route.params.name }} História de {{ $route.params.name }} História de {{ $route.params.name }} História de {{ $route.params.name }} História de {{ $route.params.name }}."
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<template id="got">
+		<div class="card">
+			<div class="card-header">
+				<i>Sinopse de <b>Game Of Thrones</b></i>
+			</div>
+			<div class="card-body">
+				"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
+			</div>
+		  </div>
+	</template>
+	
+	<script>
+		const Transformers = Vue.component('transformers', {
+			template: '#transformers',
+		});
+
+		const Got = Vue.component('game-of-thrones', {
+			template: '#got',
+		});
+
+		const TransformersCharacters = Vue.component('transformers-characters', {
+			template: '#transformers-c',
+			data(){
+				return {
+					characters: [
+						{ name: 'Optimus Prime', slug: 'optimus-prime' },
+						{ name: 'Bumble Bee', slug: 'bumble-bee' },
+						{ name: 'Megatron', slug: 'megatron' },
+					]
+				}
+			},
+		});
+
+		const router = new VueRouter({
+			routes: [
+				{ path: '/transformers', name: 'transformers', component: Transformers, 
+					children: [
+						{ path: ':name', name: 'transformers-characters', component: TransformersCharacters }
+					]
+				},
+				{ path: '/game-of-thrones', name: 'got', component: Got }
+			]
+		});
+
+		const app = new Vue({
+			el: '#app',
+
+			router,
+
+			created(){
+				this.$router.push({ name: 'transformers-characters', params: { name: 'megatron' } });
+			},
+
+			data: {
+				title: 'Aula 25 - Vue.js',
+				movie: 'transformers',
+				users: [],
+				loader: {
+					users: false,
+				},
+				response: {
+					message: 'Erro ao buscar os usuários',
+					status: ''
+				}
+			},
+
+		});
+
+	</script>
+</body>
+
+</html>
