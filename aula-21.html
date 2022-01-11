@@ -77,33 +77,6 @@
 				users: [],
 				loader: {
 					users: false,
-				},
-				response: {
-					message: 'Erro ao buscar os usuários',
-					status: ''
-				}
-			},
-
-			methods: {
-				getUsers() {
-					this.loader.users = true;
-					this.response.status = '';
-
-					const url = 'http://jsonplaceholder.typicode.com/users';
-					this.$http.get(url).then(function(response){
-						this.users = response.body;
-					}, function(error){
-						this.response.status = error.status;
-					}).
-					finally(function(){
-						this.loader.users = false;
-					});
-				},
-				
-				remove(index){
-					const name = this.users[index].name;
-					this.users.splice(index, 1);
-					alert(`${name} foi removido da lista`);
 				}
 			}
 		});
