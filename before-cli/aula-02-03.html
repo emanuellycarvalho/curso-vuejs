@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aulas 02 e 03</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ title }}</h1>
+        <p> A diferença entre o <b>v-show</b> e o <b>v-if</b> é que o primeiro altera o que aparece na tela e o segundo altera o que aparece no código. </p>
+
+        <div v-if="user.id != 0">
+            <h2>Exemplo</h2>
+            <b>Nome: </b> {{user.name}} <br>
+            <b>Identificador: </b> {{user.id}} <br>
+            <b>Profissão: </b> {{user.job}} <br>
+
+            <div id="age" v-show="user.showAge">
+                <b>Idade: </b> {{user.age}} <br>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: "#app",
+            data: {
+                title: "Aulas 02 e 03 - Vue.js",
+                user: {
+                    id: 1,
+                    showAge: false,
+                    name: "Amanda",
+                    job: "Atriz",
+                    age: 25,
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

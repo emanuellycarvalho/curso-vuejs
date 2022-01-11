@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 01</title>
+</head>
+
+<body>
+    <!-- elemento "pai" do aplicativo instanciado no script do vue -->
+    <div id="app">
+        <!-- o titulo eh a variavel que declarei no script do vue -->
+        <h1>{{ title }}</h1>
+        <p>É só isso mesmo</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: "#app", //elemento "pai" do aplicativo
+            data: {
+                title: "Aula 01 - Vue.js"
+            } // onde sao armazenadas as variáveis
+        });
+    </script>
+</body>
+
+</html>
