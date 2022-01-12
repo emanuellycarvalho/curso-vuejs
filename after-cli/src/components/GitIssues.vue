@@ -82,13 +82,13 @@
                     <caption>Issues found on <a target="_blank" href="repository.link">{{ repository.name }}</a></caption>
                     <thead>
                         <tr>
-                            <th class="col-sm-2">Number</th>
+                            <th class="col-sm-2"><center>Number</center></th>
                             <th class="col">Title</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="issue in issues" :key="issue.number">
-                            <td><a @click.prevent.stop="select(issue.number)" href="">{{ issue.number }}</a></td>
+                            <td><a @click.prevent.stop="select(issue.number)" href=""><center>{{ issue.number }}</center></a></td>
                             <td>{{ issue.title }}</td>
                         </tr>
                     </tbody>
