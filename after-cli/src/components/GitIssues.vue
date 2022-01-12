@@ -48,8 +48,8 @@
         </div>
         <div id="table" v-if="this.table.show" class="row justify-content-center">
             <div class="col-md-10">
-                <table class="table table-striped table-dark table-bordered table-hover">
-                    <caption>Issues found on </caption>
+                <table class="table table-striped table-dark table-bordered">
+                    <caption>Issues found on {{ this.repository }} </caption>
                     <thead>
                         <tr>
                             <th class="col-sm-2">Number</th>
@@ -108,12 +108,25 @@
                     this.alert.show = true;
                 }
 
-                
+                const url = `https://api.github.com/repos/${this.username}/${this.repository}/issues`;
+                axios.get(url).then((response) => {
+                    if(response.data.length > 0){
+                        this.issues = response.data;
+                        this.table.show = true;
+                        return;
+                    }
+
+                    this.alert.message = 'No issues were found here!';
+                    this.alert.icon = 'success'; 
+                    this.alert.show = true;
+
+                });
             },
 
             clear(){
                 this.username = '';
                 this.repository = '';
+                this.table.show = false;
                 this.resetAlert();
             },
 
