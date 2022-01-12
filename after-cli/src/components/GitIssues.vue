@@ -35,7 +35,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">User's repository</span>
                             </div>
-                            <input v-model="repository" type="text" class="form-control">
+                            <input v-model="repository.name" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -49,7 +49,7 @@
         <div id="table" v-if="this.table.show" class="row justify-content-center">
             <div class="col-md-10">
                 <table class="table table-striped table-dark table-bordered">
-                    <caption>Issues found on {{ this.repository }} </caption>
+                    <caption>Issues found on <a target="_blank" href="this.repository.link">{{ this.repository.name }}</a> </caption>
                     <thead>
                         <tr>
                             <th class="col-sm-2">Number</th>
@@ -86,8 +86,11 @@
         data(){
             return {
                 username: '',
-                repository: '',
                 issues: [],
+                repository: {
+                    name: '',
+                    link: ''
+                },
                 alert:{
                     message: '',
                     icon: '',
@@ -102,15 +105,16 @@
             search(){
                 this.resetAlert();
                 
-                if(!this.username || !this.repository){
+                if(!this.username || !this.repository.name){
                     this.alert.message = 'Please, fill the inputs correctly.';
                     this.alert.icon = 'warning'; 
                     this.alert.show = true;
                 }
 
-                const url = `https://api.github.com/repos/${this.username}/${this.repository}/issues`;
+                const url = `https://api.github.com/repos/${this.username}/${this.repository.name}/issues`;
                 axios.get(url).then((response) => {
                     if(response.data.length > 0){
+                        this.repository.link = `https://github.com/${this.username}/${this.repository.name}`;
                         this.issues = response.data;
                         this.table.show = true;
                         return;
@@ -125,7 +129,8 @@
 
             clear(){
                 this.username = '';
-                this.repository = '';
+                this.repository.name = '';
+                this.repository.link = '';
                 this.table.show = false;
                 this.resetAlert();
             },
