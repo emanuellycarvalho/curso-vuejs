@@ -46,10 +46,17 @@
             </form>
             <hr>
         </div>
-        <div id="table" v-if="this.table.show" class="row justify-content-center">
+
+        <div id="loader" v-if="table.loader" class="d-flex justify-content-center">
+            <div class="spinner-border text-success" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div id="table" v-if="table.show" class="row justify-content-center">
             <div class="col-md-10">
                 <table class="table table-striped table-dark table-bordered">
-                    <caption>Issues found on <a target="_blank" href="this.repository.link">{{ this.repository.name }}</a> </caption>
+                    <caption>Issues found on <a target="_blank" href="repository.link">{{ repository.name }}</a> </caption>
                     <thead>
                         <tr>
                             <th class="col-sm-2">Number</th>
@@ -65,13 +72,13 @@
                 </table>
             </div>
         </div>
-        <div id="alert" v-if="this.alert.show" class="row justify-content-center">
+        <div id="alert" v-if="alert.show" class="row justify-content-center">
             <div class="col-md-10">
                 <div class="alert alert-dark" role="alert">
-                    <svg v-if="this.alert.icon == 'info'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-                    <svg v-if="this.alert.icon == 'warning'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                    <svg v-if="this.alert.icon == 'success'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-                    {{ this.alert.message }}
+                    <svg v-if="alert.icon == 'info'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                    <svg v-if="alert.icon == 'warning'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <svg v-if="alert.icon == 'success'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                    {{ alert.message }}
                 </div>
             </div>
         </div>
@@ -97,18 +104,23 @@
                     show: false,
                 },
                 table: {
-                    show: false
-                }
+                    show: false,
+                    loader: false
+                },
             }
         },
         methods:{
             search(){
                 this.resetAlert();
+                this.table.loader = true;
+                this.table.show = false;
                 
                 if(!this.username || !this.repository.name){
                     this.alert.message = 'Please, fill the inputs correctly.';
                     this.alert.icon = 'warning'; 
                     this.alert.show = true;
+                    this.table.loader = false;
+                    return;
                 }
 
                 const url = `https://api.github.com/repos/${this.username}/${this.repository.name}/issues`;
@@ -117,13 +129,21 @@
                         this.repository.link = `https://github.com/${this.username}/${this.repository.name}`;
                         this.issues = response.data;
                         this.table.show = true;
+                        this.table.loader = false;
                         return;
                     }
 
                     this.alert.message = 'No issues were found here!';
                     this.alert.icon = 'success'; 
                     this.alert.show = true;
+                    this.table.loader = false;
 
+                })
+                .catch((error) => {
+                    this.alert.message = 'This repository was not found.';
+                    this.alert.icon = 'warning'; 
+                    this.alert.show = true; 
+                    this.table.loader = false;
                 });
             },
 
