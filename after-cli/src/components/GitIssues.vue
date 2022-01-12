@@ -212,6 +212,7 @@
                 this.repository.name = '';
                 this.repository.link = '';
                 this.table.show = false;
+                this.table.loader = false;
                 this.resetAlert();
             },
 
