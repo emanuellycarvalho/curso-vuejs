@@ -1,5 +1,6 @@
 <template>
     <div id="main-div" class="container">
+        
         <div id="symbols">
             <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
                 <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
@@ -13,12 +14,14 @@
                 </symbol>
             </svg>
         </div>
+        
         <div id="page-header">
             <h1>Vue.js + Git</h1>
-            <!-- <p>Buscando issues de um repositório do Git usando Vue.js!</p> -->
             <p>Searching for Git's repository's issues using Vue.js</p>
-            <hr>
         </div>
+
+        <hr>
+
         <div id="form">
             <form action="">
                 <div class="row justify-content-center">
@@ -44,7 +47,19 @@
                     </div>
                 </div>
             </form>
-            <hr>
+        </div>
+
+        <hr>
+                
+        <div id="alert" v-if="alert.show" class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="alert alert-dark" role="alert">
+                    <svg v-if="alert.icon == 'info'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                    <svg v-if="alert.icon == 'warning'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <svg v-if="alert.icon == 'success'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                    {{ alert.message }}
+                </div>
+            </div>
         </div>
 
         <div id="loader" v-if="table.loader" class="d-flex justify-content-center">
@@ -98,16 +113,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-        <div id="alert" v-if="alert.show" class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="alert alert-dark" role="alert">
-                    <svg v-if="alert.icon == 'info'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-                    <svg v-if="alert.icon == 'warning'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                    <svg v-if="alert.icon == 'success'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-                    {{ alert.message }}
-                </div>
             </div>
         </div>
     </div>
