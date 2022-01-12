@@ -35,7 +35,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="row justify-content-end">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <button @click.prevent.stop="backToTable()" class="btn btn-primary">Back to table</button>
                             </div>
                         </div>
@@ -106,8 +106,14 @@
     }
 </script>
 <style>
+
     #title{
         text-align: center;
         margin: 15px;
     }
+
+    .card-header{
+        text-align: center;
+    }
+    
 </style>
