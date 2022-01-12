@@ -136,13 +136,14 @@
                     this.alert.message = 'No issues were found here!';
                     this.alert.icon = 'success'; 
                     this.alert.show = true;
-                    this.table.loader = false;
 
                 })
                 .catch((error) => {
                     this.alert.message = 'This repository was not found.';
                     this.alert.icon = 'warning'; 
                     this.alert.show = true; 
+                })
+                .finally(() => {
                     this.table.loader = false;
                 });
             },
