@@ -64,9 +64,6 @@
                     </div>
                     <div class="card-footer">
                         <div class="row justify-content-end">
-                            <div class="col-10">
-                                <small>Issue found on <a target="_blank" href="repository.link">{{ repository.name }}</a></small>
-                            </div>
                             <div class="col-2">
                                 <button @click.prevent.stop="backToTable()" class="btn btn-primary">Back to table</button>
                             </div>
@@ -79,7 +76,6 @@
         <div id="table" v-if="table.show" class="row justify-content-center">
             <div class="col-md-10">
                 <table class="table table-striped table-dark table-bordered table-hover">
-                    <caption>Issues found on <a target="_blank" href="repository.link">{{ repository.name }}</a></caption>
                     <thead>
                         <tr>
                             <th class="col-sm-2"><center>Number</center></th>
@@ -88,7 +84,16 @@
                     </thead>
                     <tbody>
                         <tr v-for="issue in issues" :key="issue.number">
-                            <td><a @click.prevent.stop="select(issue.number)" href=""><center>{{ issue.number }}</center></a></td>
+                            <td>
+                                <div class="row">
+                                    <div class="col">
+                                        <a @click.prevent.stop="select(issue)" href=""><center>{{ issue.number }}</center></a>
+                                    </div>
+                                    <div class="col">
+                                        <div v-if="issue.is_loading" class="spinner-border spinner-border-sm text-light" role="status"></div>
+                                    </div>
+                                </div>
+                            </td>
                             <td>{{ issue.title }}</td>
                         </tr>
                     </tbody>
@@ -120,6 +125,7 @@
                 selectedIssue: {
                     loader: false,
                     show: false,
+                    loader: false,
                     content: {}
                 },
                 repository: {
@@ -176,10 +182,11 @@
                 });
             },
 
-            select(id){
+            select(issue){
                 this.resetAlert();
-                this.table.show = false;
+                this.$set(issue, 'is_loading', true);
                 this.selectedIssue.show = false;
+                this.table.show = false;
                 
                 if(!this.username || !this.repository.name){
                     this.alert.message = 'Please, fill the inputs correctly.';
@@ -188,7 +195,7 @@
                     return;
                 }
 
-                const url = `https://api.github.com/repos/${this.username}/${this.repository.name}/issues/${id}`;
+                const url = `https://api.github.com/repos/${this.username}/${this.repository.name}/issues/${issue.number}`;
                 axios.get(url).then((response) => {
                     this.repository.link = `https://github.com/${this.username}/${this.repository.name}`;
                     this.selectedIssue.content = response.data;
@@ -198,6 +205,8 @@
                     this.alert.message = 'This issue was not found.';
                     this.alert.icon = 'warning'; 
                     this.alert.show = true; 
+                }).finally(() => {
+                    this.$set(issue, 'is_loading', false);
                 });
             },
 
@@ -229,6 +238,13 @@
     #main-div{
         margin-top: 20px;
         margin-bottom: 20px;
+    }
+
+    .spinner-border-sm{
+        padding-left: 0;
+        padding-right: 0;
+        margin-right: 1rem;
+        margin-top: -0.2rem;
     }
     
 </style>
