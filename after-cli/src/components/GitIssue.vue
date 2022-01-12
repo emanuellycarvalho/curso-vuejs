@@ -1,34 +1,5 @@
 <template>
     <div id="main-div" class="container">
-
-        <div id="form">
-            <form action="">
-                <div class="row justify-content-center">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">GitHub Username</span>
-                            </div>
-                            <input v-model="username" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">User's repository</span>
-                            </div>
-                            <input v-model="repository.name" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <button @click.prevent.stop="search()" class="btn btn-success">SEARCH</button>
-                        <button @click.prevent.stop="clear()" class="btn btn-danger">CLEAR</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <hr>
                 
         <div id="alert" v-if="alert.show" class="row justify-content-center">
             <div class="col-md-10">
@@ -41,20 +12,20 @@
             </div>
         </div>
 
-        <div id="loader" v-if="table.loader" class="d-flex justify-content-center">
+        <div id="loader" v-if="issue.loader" class="d-flex justify-content-center">
             <div class="spinner-border text-success" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
 
-        <div id="issue" v-if="selectedIssue.show" class="row justify-content-center">
+        <div id="issue" v-if="issue.show" class="row justify-content-center">
             <div class="col-10">
                 <div class="card">
                     <div class="card-header">
-                        <h5>{{ selectedIssue.content.title }}</h5>
+                        <h5>{{ issue.content.title }}</h5>
                     </div>
                     <div class="card-body">
-                        {{ selectedIssue.content.body }}
+                        {{ issue.content.body }}
                     </div>
                     <div class="card-footer">
                         <div class="row justify-content-end">
@@ -67,33 +38,6 @@
             </div>
         </div>
 
-        <div id="table" v-if="table.show" class="row justify-content-center">
-            <div class="col-md-10">
-                <table class="table table-striped table-dark table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th class="col-sm-2"><center>Number</center></th>
-                            <th class="col">Title</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="issue in issues" :key="issue.number">
-                            <td>
-                                <div class="row">
-                                    <div class="col">
-                                        <a @click.prevent.stop="select(issue)" href=""><center>{{ issue.number }}</center></a>
-                                    </div>
-                                    <div class="col">
-                                        <div v-if="issue.is_loading" class="spinner-border spinner-border-sm text-light" role="status"></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ issue.title }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -101,115 +45,51 @@
     import axios from 'axios';
 
     export default {
-        name: 'GitIssues',
+        name: 'GitIssue',
         data(){
             return {
-                username: '',
-                issues: [],
-                selectedIssue: {
+                issue: {
                     loader: false,
                     show: false,
                     loader: false,
                     content: {}
-                },
-                repository: {
-                    name: '',
-                    link: ''
                 },
                 alert:{
                     message: '',
                     icon: '',
                     show: false,
                 },
-                table: {
-                    show: false,
-                    loader: false
-                },
             }
         },
 
+        created(){
+            this.getIssue();
+        },
+
         methods:{
-            search(){
+            getIssue(){
                 this.resetAlert();
-                this.table.loader = true;
-                this.table.show = false;
+                this.issue.show = false;
+                this.issue.loader = true;
                 
-                if(!this.username || !this.repository.name){
-                    this.alert.message = 'Please, fill the inputs correctly.';
-                    this.alert.icon = 'warning'; 
-                    this.alert.show = true;
-                    this.table.loader = false;
-                    return;
-                }
-
-                const url = `https://api.github.com/repos/${this.username}/${this.repository.name}/issues`;
-                axios.get(url).then((response) => {
-                    if(response.data.length > 0){
-                        this.repository.link = `https://github.com/${this.username}/${this.repository.name}`;
-                        this.issues = response.data;
-                        this.table.show = true;
-                        this.table.loader = false;
-                        return;
-                    }
-
-                    this.alert.message = 'No issues were found here!';
-                    this.alert.icon = 'success'; 
-                    this.alert.show = true;
-
-                })
-                .catch((error) => {
-                    this.alert.message = 'This repository was not found.';
-                    this.alert.icon = 'warning'; 
-                    this.alert.show = true; 
-                })
-                .finally(() => {
-                    this.table.loader = false;
-                });
-            },
-
-            select(issue){
-                this.resetAlert();
-                this.$set(issue, 'is_loading', true);
-                this.selectedIssue.show = false;
-                
-                if(!this.username || !this.repository.name){
-                    this.alert.message = 'Please, fill the inputs correctly.';
-                    this.alert.icon = 'warning'; 
-                    this.table.show = false;
-                    this.alert.show = true;
-                    return;
-                }
-
-                const url = `https://api.github.com/repos/${this.username}/${this.repository.name}/issues/${issue.number}`;
+                const url = `https://api.github.com/repos/${this.$route.params.name}/${this.$route.params.repo}/issues/${this.$route.params.issue}`;
                 axios.get(url).then((response) => {
                     this.repository.link = `https://github.com/${this.username}/${this.repository.name}`;
-                    this.selectedIssue.content = response.data;
-                    this.table.show = false;
-                    this.selectedIssue.show = true;
+                    this.issue.content = response.data;
+                    this.issue.show = true;
                 })
                 .catch((error) => {
                     this.alert.message = 'This issue was not found.';
                     this.alert.icon = 'warning'; 
-                    this.table.show = false;
                     this.alert.show = true; 
                 }).finally(() => {
-                    this.$set(issue, 'is_loading', false);
-                });
+                    this.issue.loader = false;
+                });                
             },
 
             backToTable(){
-                this.selectedIssue.show = false;
-                this.selectedIssue.content = {};
-                this.table.show = true;
-            },
-
-            clear(){
-                this.username = '';
-                this.repository.name = '';
-                this.repository.link = '';
-                this.table.show = false;
-                this.table.loader = false;
-                this.resetAlert();
+                this.issue.show = false;
+                this.issue.content = {};
             },
 
             resetAlert(){
@@ -221,17 +101,5 @@
     }
 </script>
 <style>
-
-    #main-div{
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .spinner-border-sm{
-        padding-left: 0;
-        padding-right: 0;
-        margin-right: 1rem;
-        margin-top: -0.2rem;
-    }
     
 </style>
