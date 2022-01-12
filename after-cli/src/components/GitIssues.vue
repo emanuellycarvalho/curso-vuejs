@@ -47,46 +47,19 @@
             </div>
         </div>
 
-        <div id="issue" v-if="selectedIssue.show" class="row justify-content-center">
-            <div class="col-10">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>{{ selectedIssue.content.title }}</h5>
-                    </div>
-                    <div class="card-body">
-                        {{ selectedIssue.content.body }}
-                    </div>
-                    <div class="card-footer">
-                        <div class="row justify-content-end">
-                            <div class="col-2">
-                                <button @click.prevent.stop="backToTable()" class="btn btn-primary">Back to table</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div id="table" v-if="table.show" class="row justify-content-center">
             <div class="col-md-10">
                 <table class="table table-striped table-dark table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th class="col-sm-2"><center>Number</center></th>
+                            <th class="col-sm-2 issue-number">Number</th>
                             <th class="col">Title</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="issue in issues" :key="issue.number">
-                            <td>
-                                <div class="row">
-                                    <div class="col">
-                                        <a @click.prevent.stop="select(issue)" href=""><center>{{ issue.number }}</center></a>
-                                    </div>
-                                    <div class="col">
-                                        <div v-if="issue.is_loading" class="spinner-border spinner-border-sm text-light" role="status"></div>
-                                    </div>
-                                </div>
+                            <td class="issue-number">
+                                <router-link :to="{ name: 'GitIssue', params: { user: username, repo: repository.name, issue: issue.number } }">{{ issue.number }}</router-link>
                             </td>
                             <td>{{ issue.title }}</td>
                         </tr>
@@ -228,6 +201,10 @@
         padding-right: 0;
         margin-right: 1rem;
         margin-top: -0.2rem;
+    }
+
+    .issue-number{
+        text-align: center;
     }
     
 </style>

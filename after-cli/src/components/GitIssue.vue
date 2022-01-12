@@ -1,8 +1,14 @@
 <template>
     <div id="main-div" class="container">
+
+        <div id="title" class="row justify-content-center">
+            <div class="col-md-9">
+                <h3>Issue number {{ $route.params.issue }} on {{ $route.params.user }}'s repository {{ $route.params.repo }}</h3>
+            </div>
+        </div>
                 
         <div id="alert" v-if="alert.show" class="row justify-content-center">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <div class="alert alert-dark" role="alert">
                     <svg v-if="alert.icon == 'info'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
                     <svg v-if="alert.icon == 'warning'" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
@@ -19,7 +25,7 @@
         </div>
 
         <div id="issue" v-if="issue.show" class="row justify-content-center">
-            <div class="col-10">
+            <div class="col-9">
                 <div class="card">
                     <div class="card-header">
                         <h5>{{ issue.content.title }}</h5>
@@ -72,9 +78,8 @@
                 this.issue.show = false;
                 this.issue.loader = true;
                 
-                const url = `https://api.github.com/repos/${this.$route.params.name}/${this.$route.params.repo}/issues/${this.$route.params.issue}`;
+                const url = `https://api.github.com/repos/${this.$route.params.user}/${this.$route.params.repo}/issues/${this.$route.params.issue}`;
                 axios.get(url).then((response) => {
-                    this.repository.link = `https://github.com/${this.username}/${this.repository.name}`;
                     this.issue.content = response.data;
                     this.issue.show = true;
                 })
@@ -101,5 +106,8 @@
     }
 </script>
 <style>
-    
+    #title{
+        text-align: center;
+        margin: 15px;
+    }
 </style>
