@@ -186,11 +186,11 @@
                 this.resetAlert();
                 this.$set(issue, 'is_loading', true);
                 this.selectedIssue.show = false;
-                this.table.show = false;
                 
                 if(!this.username || !this.repository.name){
                     this.alert.message = 'Please, fill the inputs correctly.';
                     this.alert.icon = 'warning'; 
+                    this.table.show = false;
                     this.alert.show = true;
                     return;
                 }
@@ -199,11 +199,13 @@
                 axios.get(url).then((response) => {
                     this.repository.link = `https://github.com/${this.username}/${this.repository.name}`;
                     this.selectedIssue.content = response.data;
+                    this.table.show = false;
                     this.selectedIssue.show = true;
                 })
                 .catch((error) => {
                     this.alert.message = 'This issue was not found.';
                     this.alert.icon = 'warning'; 
+                    this.table.show = false;
                     this.alert.show = true; 
                 }).finally(() => {
                     this.$set(issue, 'is_loading', false);
