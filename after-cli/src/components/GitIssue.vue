@@ -36,7 +36,7 @@
                     <div class="card-footer">
                         <div class="row justify-content-end">
                             <div class="col-3">
-                                <button @click.prevent.stop="backToTable()" class="btn btn-primary">Back to table</button>
+                                <a href="javascript.history.go(-1)" class="btn btn-primary">Back to search</a>
                             </div>
                         </div>
                     </div>
